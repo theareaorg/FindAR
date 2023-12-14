@@ -1,0 +1,7 @@
+numpy
+pandas
+requests
+tqdm
+seaborn
+scikit-learn
+nltk

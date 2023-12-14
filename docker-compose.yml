@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  downloader:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    tty: true
+    command: 'sh storage/runall.sh'
+    env_file: vars.env
+    volumes:
+      - .:/storage
