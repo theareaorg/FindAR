@@ -44,7 +44,12 @@ def process_dataset(
     # os.chdir(data_directory)
     # output = "output_2"
     # create a new directory for each run
-    output = increment_path(output_folder_name, mkdir=True)
+    # output = increment_path(output_folder_name, mkdir=True)
+    if not os.path.exists(output_folder_name):
+        os.mkdir(output_folder_name)
+    if not os.path.exists(f"{output_folder_name}/output_{date}"):
+        os.mkdir(f"{output_folder_name}/output_{date}")
+    output = f"{output_folder_name}/output_{date}"
     os.mkdir(f"{output}/figures")
     os.mkdir(f"{output}/json")
     os.mkdir(f"{output}/text")
@@ -110,7 +115,7 @@ def process_dataset(
     )
     dataset.dropna(subset=["cleanAbstract"], inplace=True)
     dataset["Relevant"] = dataset["Relevant"].astype(int)
-    dataset.to_csv("storage/for_learning.csv", index=False)
+    # dataset.to_csv("storage/for_learning.csv", index=False)
     # dataset, change_log = active_learning.active_learning(
     #     dataset, "IdeasTagsPlusAbstract", mode="min"
     # )
