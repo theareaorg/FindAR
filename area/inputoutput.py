@@ -39,9 +39,11 @@ def export_analysis(
     alias,
     new_alias,
 ):
+    print(dataset.columns)
     df_json = (
         dataset[
             [
+                "index",
                 "Title",
                 "DOI",
                 YEAR,
@@ -59,6 +61,7 @@ def export_analysis(
         .copy()
         .rename(
             columns={
+                "index": "Index",
                 "lowlvl": "LowLevel",
                 "highlvl": "HighLevel",
                 "midlvl": "MidLevel",
@@ -141,14 +144,11 @@ def export_analysis(
     topics_json = []
     new_alias_ = new_alias.sort_values(by="LowLevel", ascending=True)
     new_alias_.to_csv(f"{output}/text/new_alias.csv")
-    file1 = open(f"{output}/json/category.json", "w")
-    file1.write("[")
-    for i in range(0, len(new_alias_)):
-        file1.write("{" + '"label"' + ":" + '"' + new_alias_["LowLevel"][i] + '",')
-        file1.write('"category"' + ":" + '"' + new_alias_["MidLevel"][i] + '"')
-        file1.write("},")
-    # file1.write('{"category": ""}')
-    file1.write("]")
+    new_alias_ = new_alias_.rename(
+        columns={"MidLevel": "category", "LowLevel": "label"}
+    )
+    print(new_alias_.columns)
+    new_alias_[["category", "label"]].to_json("category.json", orient="records")
     for i in range(0, len(varnames_mid)):
         topics_json.append({"term": varnames_mid[i], "lowLevel": buckets[i]})
 
@@ -157,7 +157,6 @@ def export_analysis(
 
 
 def export_scored_topics(ideas, date):
-    print(ideas.columns)
     ideas[
         [
             "Title",
